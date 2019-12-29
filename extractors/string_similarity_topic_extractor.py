@@ -32,11 +32,6 @@ class StringSimilarityTopicExtractor(TopicExtractor):
         return StringMatcher(None, str1, str2).ratio()
 
     @staticmethod
-    def get_similarity(strings):
-        str1, str2 = strings
-        return str1, str2, StringSimilarityTopicExtractor.get_levenshtein_similarity(str1, str2)
-
-    @staticmethod
     def get_fuzzy_similarity(str1: str, str2: str):
         return fuzz.ratio(str1, str2) / 100.0
 
