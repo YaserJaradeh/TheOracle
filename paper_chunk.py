@@ -1,6 +1,8 @@
 from nltk.util import everygrams
 from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import regexp_tokenize as tokenize
+
+PATTERN = r'\w+'
 
 
 class PaperChunk:
@@ -13,11 +15,14 @@ class PaperChunk:
 
     @property
     def clean_text(self):
-        word_tokens = word_tokenize(self.text)
+        word_tokens = tokenize(self.text, PATTERN)
         return [t for t in word_tokens if t.lower() not in self._stopwords]
 
     @property
     def everygram(self):
-        word_tokens = word_tokenize(self.text)
+        word_tokens = tokenize(self.text, PATTERN)
         ngrams = [' '.join(w) for w in everygrams(word_tokens, max_len=2)]
-        return [w for w in ngrams if len(set(word_tokenize(w.lower())) & self._stopwords) == 0]
+        return [w for w in ngrams if len(set(tokenize(w.lower(), PATTERN)) & self._stopwords) == 0]
+
+    def get_ngrams(self, n=3):
+        return [' '.join(w) for w in everygrams(self.clean_text, max_len=n)]
