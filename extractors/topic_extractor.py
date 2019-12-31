@@ -4,8 +4,8 @@ from paper_chunk import PaperChunk
 
 class TopicExtractor:
 
-    def __init__(self, mag_fields: str = '../data/fields.pkl'):
-        self.fields_path = mag_fields
+    def __init__(self, data_path: str):
+        self.data_path = data_path
 
     def get_topics(self, paper: PaperChunk, k: int = 10) -> List[str]:
         pass
