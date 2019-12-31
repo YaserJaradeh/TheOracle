@@ -2,3 +2,5 @@ lxml
 fuzzywuzzy
 python-Levenshtein
 numpy
+tomotopy
+nltk
