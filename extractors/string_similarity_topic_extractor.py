@@ -16,12 +16,6 @@ class StringSimilarityTopicExtractor(TopicExtractor):
         with open(self.data_path, 'rb') as infile:
             self.fields = pickle.load(infile)
 
-    def get_topics_old(self, paper: PaperChunk, k: int = 10) -> List[str]:
-        possibilities = list(itertools.product(set(paper.everygram), set(self.fields)))
-        print(len(possibilities))
-        similarities = [(p[0], p[1], self.get_levenshtein_similarity(p[0], p[1])) for p in possibilities]
-        return [t[1] for t in sorted(similarities, key=lambda x: x[2], reverse=True) if t[2] >= self.min_similarity][:k]
-
     def get_topics(self, paper: PaperChunk, k: int = 10) -> List[str]:
         possibilities = [tup for tup in itertools.product(set(paper.everygram), set(self.fields)) if len(tup[0].split()) == len(tup[1].split())]
         similarities = [(p[0], p[1], self.get_levenshtein_similarity(p[0], p[1])) for p in possibilities]
