@@ -10,10 +10,10 @@ from fuzzywuzzy import fuzz
 
 class StringSimilarityTopicExtractor(TopicExtractor):
 
-    def __init__(self, min_similarity=0.9):
-        super().__init__()
+    def __init__(self, min_similarity=0.9, fields_path: str = '../data/fields.pkl'):
+        super().__init__(fields_path)
         self.min_similarity = min_similarity
-        with open(self.fields_path, 'rb') as infile:
+        with open(self.data_path, 'rb') as infile:
             self.fields = pickle.load(infile)
 
     def get_topics_old(self, paper: PaperChunk, k: int = 10) -> List[str]:
