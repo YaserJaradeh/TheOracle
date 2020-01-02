@@ -2,6 +2,7 @@ from lxml import etree
 import pickle
 import tomotopy as tp
 from paper_chunk import PaperChunk
+from bert_embedding.bert import BertEmbedding
 
 
 def serialize_mag_topics():
@@ -43,4 +44,13 @@ def create_lda_model():
 
 
 if __name__ == '__main__':
-    create_lda_model()
+    with open('./data/fields.pkl', 'rb') as infile:
+        fields = pickle.load(infile)
+        print('fields loaded!')
+        bert = BertEmbedding(model='bert_24_1024_16', dataset_name='book_corpus_wiki_en_uncased')
+        print('Bert Embedding initialized!')
+        embeddings = bert(fields)
+        print('Embeddings created for all fields!!')
+        collection = {fields[i]: embeddings[i] for i in range(len(fields))}
+        with open('./data/fields_embedding.pkl', 'wb') as outfile:
+            fields = pickle.dump(outfile, collection)
