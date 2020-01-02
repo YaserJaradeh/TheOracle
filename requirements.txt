@@ -6,3 +6,4 @@ tomotopy
 nltk
 spacy
 gensim
+bert-embedding
