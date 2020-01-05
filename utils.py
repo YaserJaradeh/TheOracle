@@ -3,6 +3,7 @@ import pickle
 import tomotopy as tp
 from paper_chunk import PaperChunk
 from bert_embedding.bert import BertEmbedding
+import numpy as np
 
 
 def serialize_mag_topics():
@@ -47,10 +48,14 @@ if __name__ == '__main__':
     with open('./data/fields.pkl', 'rb') as infile:
         fields = pickle.load(infile)
         print('fields loaded!')
-        bert = BertEmbedding(model='bert_24_1024_16', dataset_name='book_corpus_wiki_en_uncased')
+        bert = BertEmbedding()
         print('Bert Embedding initialized!')
-        embeddings = bert(fields)
+        embeddings = {field: np.mean(np.array(bert([field])[0][1]), axis=0) for field in fields}
+        # embeddings = {}
+        # for field in fields:
+        #    result = bert([field])
+        #    embeddings[field] = np.mean(np.array(result[0][1]), axis=0)
         print('Embeddings created for all fields!!')
-        collection = {fields[i]: embeddings[i] for i in range(len(fields))}
+        # collection = {fields[i]: embeddings[i] for i in range(len(fields))}
         with open('./data/fields_embedding.pkl', 'wb') as outfile:
-            fields = pickle.dump(outfile, collection)
+            fields = pickle.dump(outfile, embeddings)
