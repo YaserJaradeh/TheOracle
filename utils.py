@@ -44,18 +44,17 @@ def create_lda_model():
     mdl.save('./data/lda_mag_abstracts_k150.bin')
 
 
-if __name__ == '__main__':
+def create_bert_embeddings():
     with open('./data/fields.pkl', 'rb') as infile:
         fields = pickle.load(infile)
         print('fields loaded!')
         bert = BertEmbedding()
         print('Bert Embedding initialized!')
         embeddings = {field: np.mean(np.array(bert([field])[0][1]), axis=0) for field in fields}
-        # embeddings = {}
-        # for field in fields:
-        #    result = bert([field])
-        #    embeddings[field] = np.mean(np.array(result[0][1]), axis=0)
         print('Embeddings created for all fields!!')
-        # collection = {fields[i]: embeddings[i] for i in range(len(fields))}
         with open('./data/fields_embedding.pkl', 'wb') as outfile:
-            fields = pickle.dump(outfile, embeddings)
+            fields = pickle.dump(embeddings, outfile)
+
+
+if __name__ == '__main__':
+    create_bert_embeddings()
