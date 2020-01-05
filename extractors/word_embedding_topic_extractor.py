@@ -1,28 +1,30 @@
 from typing import List
 from paper_chunk import PaperChunk
 from extractors.topic_extractor import TopicExtractor
-from gensim.models import Word2Vec
-import nltk
+import numpy as np
+from bert_embedding import BertEmbedding
+import pickle
+from sklearn.metrics.pairwise import cosine_similarity
 
 
 class WordEmbeddingTopicExtractor(TopicExtractor):
 
-    def __init__(self, embedding_model_path: str = '../data/w2v_model.bin'):
-        super().__init__(embedding_model_path)
-        self.model = Word2Vec.load(self.data_path)
+    def __init__(self, field_embeddings_path='../data/fields_embedding.pkl', min_similarity=0.8):
+        super().__init__(field_embeddings_path)
+        self.min_similarity = min_similarity
+        self.model = BertEmbedding()
+        with open(self.data_path, 'rb') as infile:
+            self.fields_embeddings: dict = pickle.load(infile)
+
+    def get_embeddings(self, string):
+        return np.mean(np.array(self.model([string])[0][1]), axis=0)
 
     def get_topics(self, paper: PaperChunk, k: int = 10) -> List[str]:
         chunks = paper.get_grammar_chunks()
-        for chunk in chunks:
-            for ngram in nltk.everygrams(chunk, min_len=1, max_len=3):
-                gram = '_'.join(ngram)
-                if gram in self.model:
-                    sim_words = self.model[gram]
-                else:
-                    embeddings = []
-                    for word in ngram:
-                        if word in self.model:
-                            embeddings.append(self.model.wv[word])
+        chunks_embeddings = [self.get_embeddings(chunk) for chunk in chunks]
+        fields = self.fields_embeddings.keys()
+        fields_embeddings = [self.fields_embeddings[field] for field in fields]
+        cosine_similarity(chunks_embeddings, fields_embeddings)
 
 
 if __name__ == '__main__':
