@@ -7,7 +7,7 @@ import re
 import html
 
 PATTERN = r'\w+'
-GRAMMAR = "DBW_CONCEPT: {<JJ.*>*<HYPH>*<JJ.*>*<HYPH>*<NN.*>*<HYPH>*<NN.*>+}"
+GRAMMAR = "CONCEPT: {<JJ.*>*<HYPH>*<JJ.*>*<HYPH>*<NN.*>*<HYPH>*<NN.*>+}"
 
 
 class PaperChunk:
@@ -42,7 +42,7 @@ class PaperChunk:
         chunks = list()
         pos_tags_with_grammar = grammar_parser.parse(list(pos_tags))
         for node in pos_tags_with_grammar:
-            if isinstance(node, tree.Tree) and node.label() == 'DBW_CONCEPT':  # if matches our grammar
+            if isinstance(node, tree.Tree) and node.label() == 'CONCEPT':
                 chunk = ''
                 for leaf in node.leaves():
                     concept_chunk = leaf[0]
