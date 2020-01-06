@@ -8,3 +8,4 @@ spacy
 gensim
 bert-embedding
 sklearn
+pandas
