@@ -53,7 +53,7 @@ def create_bert_embeddings():
         embeddings = {field: np.mean(np.array(bert([field])[0][1]), axis=0) for field in fields}
         print('Embeddings created for all fields!!')
         with open('./data/fields_embedding.pkl', 'wb') as outfile:
-            fields = pickle.dump(embeddings, outfile)
+            pickle.dump(embeddings, outfile)
 
 
 if __name__ == '__main__':
